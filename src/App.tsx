@@ -20,11 +20,22 @@ function App(): JSX.Element {
           mx="10px"
         >
           <Box />
-          <Heading size="md">Channels</Heading>
+          <Flex alignItems="center">
+            <Image
+              src="/tv.png"
+              alt="company logo showing a tv"
+              boxSize={6}
+              mb={1}
+              mr={2}
+            />
+            <Heading size="md">Channels</Heading>
+          </Flex>
           <Flex
             alignItems="center"
             border="2px solid #eee"
+            borderRadius={5}
             p={2}
+            px={4}
             cursor="pointer"
           >
             <Text fontSize="sm" mr={6} fontWeight="semibold">
