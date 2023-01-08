@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import AuthModal from "./AuthModal";
+import RegisterModal from "./RegisterModal";
 
 export default function Navbar(): JSX.Element {
   // TODO: Placeholder auth. Switch to context
@@ -52,7 +52,7 @@ export default function Navbar(): JSX.Element {
             />
           </Flex>
         ) : (
-          <AuthModal />
+          <RegisterModal />
         )}
       </Flex>
     </GridItem>
