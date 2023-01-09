@@ -12,10 +12,12 @@ import {
   useDisclosure,
   Spinner,
   FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
 
 interface RegisterValues {
   username: string;
@@ -25,6 +27,7 @@ interface RegisterValues {
 
 export default function RegisterModal(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const registerSchema = yup.object({
     username: yup.string().required("Please enter your username"),
@@ -43,8 +46,31 @@ export default function RegisterModal(): JSX.Element {
   });
 
   // TODO - Integrate API
-  const onSubmit = (values: RegisterValues): void => {
-    console.log(values);
+  const onSubmit = async (values: RegisterValues): Promise<void> => {
+    try {
+      await axios.post("http://localhost:3000/register", {
+        username: values.username,
+        password: values.password,
+      });
+
+      toast({
+        title: "Success",
+        description: "Your account has been created",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      onClose();
+    } catch (e: any) {
+      toast({
+        title: "Error",
+        description: e.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
