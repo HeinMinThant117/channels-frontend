@@ -11,8 +11,11 @@ import {
   Input,
   useDisclosure,
   Spinner,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 interface RegisterValues {
   username: string;
@@ -22,20 +25,26 @@ interface RegisterValues {
 
 export default function RegisterModal(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const registerSchema = yup.object({
+    username: yup.string().required("Please enter your username"),
+    password: yup.string().required("Please enter your password"),
+    passwordConfirm: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match"),
+  });
+
   const {
     handleSubmit,
     register,
-    formState: { isSubmitting },
-  } = useForm<RegisterValues>();
+    formState: { isSubmitting, errors },
+  } = useForm<RegisterValues>({
+    resolver: yupResolver(registerSchema),
+  });
 
-  async function onSubmit(values: RegisterValues): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log(values);
-        resolve();
-      }, 3000);
-    });
-  }
+  const onSubmit = (values: RegisterValues): void => {
+    console.log(values);
+  };
 
   return (
     <>
@@ -44,17 +53,22 @@ export default function RegisterModal(): JSX.Element {
         <ModalOverlay />
         <ModalContent p={6}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl>
+            <FormControl isInvalid={Boolean(errors.username)}>
               <FormLabel>Username</FormLabel>
               <Input type="text" id="username" {...register("username")} />
+              <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl mt={2}>
+            <FormControl mt={2} isInvalid={Boolean(errors.password)}>
               <FormLabel>Password</FormLabel>
               <Input type="password" {...register("password")} />
+              <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl mt={2}>
+            <FormControl mt={2} isInvalid={Boolean(errors.passwordConfirm)}>
               <FormLabel>Confirm Password</FormLabel>
               <Input type="password" {...register("passwordConfirm")} />
+              <FormErrorMessage>
+                {errors.passwordConfirm?.message}
+              </FormErrorMessage>
             </FormControl>
             <Button
               mt={4}
