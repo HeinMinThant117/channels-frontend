@@ -16,6 +16,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 interface LoginValues {
   username: string;
@@ -36,8 +37,11 @@ export default function LoginModal(): JSX.Element {
     formState: { isSubmitting, errors },
   } = useForm<LoginValues>({ resolver: yupResolver(loginSchema) });
 
-  const onSubmit = (values: LoginValues): void => {
-    console.log(values);
+  const onSubmit = async (values: LoginValues): Promise<void> => {
+    await axios.post("http://localhost:3000/", {
+      username: values.username,
+      password: values.password,
+    });
   };
 
   return (
