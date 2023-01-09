@@ -56,7 +56,7 @@ function App(): JSX.Element {
             </Text>
           </Box>
           <Flex direction="column" h="140px">
-            <Textarea resize="none" />
+            <Textarea resize="none" placeholder="Enter your message....." />
             <Button mt={2} ml="auto">
               Send
             </Button>
