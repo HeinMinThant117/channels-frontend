@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Spinner,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -25,6 +26,7 @@ interface LoginValues {
 
 export default function LoginModal(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const loginSchema = yup.object({
     username: yup.string().required("Please enter your username"),
@@ -38,10 +40,30 @@ export default function LoginModal(): JSX.Element {
   } = useForm<LoginValues>({ resolver: yupResolver(loginSchema) });
 
   const onSubmit = async (values: LoginValues): Promise<void> => {
-    await axios.post("http://localhost:3000/", {
-      username: values.username,
-      password: values.password,
-    });
+    try {
+      await axios.post("http://localhost:3000/login", {
+        username: values.username,
+        password: values.password,
+      });
+
+      toast({
+        title: "Success",
+        description: "You have successfully logged in.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      onClose();
+    } catch (e: any) {
+      toast({
+        title: "Error",
+        description: e.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
