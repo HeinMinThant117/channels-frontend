@@ -5,9 +5,11 @@ import {
   GridItem,
   Heading,
   Image,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 export default function Navbar(): JSX.Element {
@@ -52,7 +54,10 @@ export default function Navbar(): JSX.Element {
             />
           </Flex>
         ) : (
-          <RegisterModal />
+          <Stack direction="row">
+            <RegisterModal />
+            <LoginModal />
+          </Stack>
         )}
       </Flex>
     </GridItem>

@@ -1,75 +1,61 @@
-/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
 import {
   Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
+  Input,
   Modal,
   ModalContent,
   ModalOverlay,
-  Input,
-  useDisclosure,
   Spinner,
-  FormErrorMessage,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useForm } from "react-hook-form";
 
-interface RegisterValues {
+interface LoginValues {
   username: string;
   password: string;
-  passwordConfirm: string;
 }
 
-export default function RegisterModal(): JSX.Element {
+export default function LoginModal(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const registerSchema = yup.object({
+  const loginSchema = yup.object({
     username: yup.string().required("Please enter your username"),
     password: yup.string().required("Please enter your password"),
-    passwordConfirm: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
 
   const {
     handleSubmit,
     register,
     formState: { isSubmitting, errors },
-  } = useForm<RegisterValues>({
-    resolver: yupResolver(registerSchema),
-  });
+  } = useForm<LoginValues>({ resolver: yupResolver(loginSchema) });
 
-  // TODO - Integrate API
-  const onSubmit = (values: RegisterValues): void => {
+  const onSubmit = (values: LoginValues): void => {
     console.log(values);
   };
 
   return (
     <>
-      <Button onClick={onOpen}>Register</Button>
+      <Button onClick={onOpen}>Login</Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent p={6}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl isInvalid={Boolean(errors.username)}>
+            <FormControl mt={2} isInvalid={Boolean(errors.username)}>
               <FormLabel>Username</FormLabel>
               <Input type="text" id="username" {...register("username")} />
               <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
             </FormControl>
             <FormControl mt={2} isInvalid={Boolean(errors.password)}>
               <FormLabel>Password</FormLabel>
-              <Input type="password" {...register("password")} />
+              <Input type="password" id="password" {...register("password")} />
               <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl mt={2} isInvalid={Boolean(errors.passwordConfirm)}>
-              <FormLabel>Confirm Password</FormLabel>
-              <Input type="password" {...register("passwordConfirm")} />
-              <FormErrorMessage>
-                {errors.passwordConfirm?.message}
-              </FormErrorMessage>
             </FormControl>
             <Button
               mt={4}
@@ -79,7 +65,7 @@ export default function RegisterModal(): JSX.Element {
               mx="auto"
               type="submit"
             >
-              {isSubmitting ? <Spinner size="sm" /> : "Register"}
+              {isSubmitting ? <Spinner size="sm" /> : "Login"}
             </Button>
           </form>
         </ModalContent>
