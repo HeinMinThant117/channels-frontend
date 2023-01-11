@@ -55,7 +55,7 @@ export default function RegisterModal(): JSX.Element {
 
       toast({
         title: "Success",
-        description: "Your account has been created",
+        description: "Your account has been created. Please login.",
         status: "success",
         duration: 5000,
         isClosable: true,
