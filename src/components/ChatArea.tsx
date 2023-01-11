@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, GridItem, Textarea } from "@chakra-ui/react";
-import ChatMessage from "./ChatMessage";
 import UserJoinedMessage from "./UserJoinedMessage";
 import SocketContext from "../contexts/SocketContext";
 
 export default function ChatArea(): JSX.Element {
   const socket = useContext(SocketContext);
   const [messages, setMessages] = useState<string[]>([]);
+  const [currentChatMessage, setCurrentChatMessage] = useState<string>("");
 
   useEffect(() => {
     socket?.on("joined", (arg) => {
@@ -17,10 +17,27 @@ export default function ChatArea(): JSX.Element {
       setMessages([...messages, arg]);
     });
 
+    socket?.on("message", (arg) => {
+      setMessages([...messages, arg]);
+    });
+
     return () => {
       socket?.off("joined");
+      socket?.off("logout");
+      socket?.off("message");
     };
   }, [socket, messages]);
+
+  const sendMessage = (message: string): void => {
+    socket?.emit("message", message);
+    setCurrentChatMessage("");
+  };
+
+  const handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.key === "Enter" && event.ctrlKey) {
+      sendMessage(currentChatMessage);
+    }
+  };
 
   return (
     <GridItem>
@@ -32,8 +49,22 @@ export default function ChatArea(): JSX.Element {
           ))}
         </Box>
         <Flex direction="column" h="140px">
-          <Textarea resize="none" placeholder="Enter your message....." />
-          <Button mt={2} ml="auto">
+          <Textarea
+            value={currentChatMessage}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => {
+              setCurrentChatMessage(e.target.value);
+            }}
+            resize="none"
+            placeholder="Enter your message....."
+          />
+          <Button
+            onClick={() => {
+              sendMessage(currentChatMessage);
+            }}
+            mt={2}
+            ml="auto"
+          >
             Send
           </Button>
         </Flex>

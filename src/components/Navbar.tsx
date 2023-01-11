@@ -22,7 +22,7 @@ export default function Navbar(): JSX.Element {
   const handleLogout = (): void => {
     setUser(null);
     if (user != null) {
-      socket?.emit("logout", `${user?.username} has loggedo out`);
+      socket?.emit("logout", `${user?.username} has logged out`);
     }
   };
 
