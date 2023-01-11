@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   GridItem,
   Heading,
@@ -14,7 +15,11 @@ import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 export default function Navbar(): JSX.Element {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+
+  const handleLogout = (): void => {
+    setUser(null);
+  };
 
   return (
     <GridItem colSpan={3} borderBottom="1px solid #eee">
@@ -36,23 +41,26 @@ export default function Navbar(): JSX.Element {
           <Heading size="md">Channels</Heading>
         </Flex>
         {user != null ? (
-          <Flex
-            alignItems="center"
-            border="2px solid #eee"
-            borderRadius={5}
-            p={2}
-            px={4}
-            cursor="pointer"
-          >
-            <Text fontSize="sm" mr={6} fontWeight="semibold">
-              {user.username}
-            </Text>
-            <Avatar
-              boxSize={7}
-              mb={1}
-              src="https://avatars.dicebear.com/api/pixel-art/avdkfjdjdjdjd.svg"
-            />
-          </Flex>
+          <Stack direction="row" alignItems="center">
+            <Flex
+              alignItems="center"
+              border="2px solid #eee"
+              borderRadius={5}
+              p={2}
+              px={4}
+              cursor="pointer"
+            >
+              <Text fontSize="sm" mr={6} fontWeight="semibold">
+                {user.username}
+              </Text>
+              <Avatar
+                boxSize={7}
+                mb={1}
+                src={`https://avatars.dicebear.com/api/pixel-art/${user.username}.svg`}
+              />
+            </Flex>
+            <Button onClick={handleLogout}>Logout</Button>
+          </Stack>
         ) : (
           <Stack direction="row">
             <RegisterModal />
