@@ -33,12 +33,6 @@ export default function ChatArea(): JSX.Element {
     setCurrentChatMessage("");
   };
 
-  const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === "Enter" && event.ctrlKey) {
-      sendMessage(currentChatMessage);
-    }
-  };
-
   return (
     <GridItem>
       <Flex direction="column" justifyContent="space-between" h="100%" mx={4}>
@@ -51,7 +45,6 @@ export default function ChatArea(): JSX.Element {
         <Flex direction="column" h="140px">
           <Textarea
             value={currentChatMessage}
-            onKeyDown={handleKeyDown}
             onChange={(e) => {
               setCurrentChatMessage(e.target.value);
             }}
