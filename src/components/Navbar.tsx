@@ -11,14 +11,19 @@ import {
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import AuthContext from "../contexts/AuthContext";
+import SocketContext from "../contexts/SocketContext";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 export default function Navbar(): JSX.Element {
   const { user, setUser } = useContext(AuthContext);
+  const socket = useContext(SocketContext);
 
   const handleLogout = (): void => {
     setUser(null);
+    if (user != null) {
+      socket?.emit("logout", `${user?.username} has loggedo out`);
+    }
   };
 
   return (

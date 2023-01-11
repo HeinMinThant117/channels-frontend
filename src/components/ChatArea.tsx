@@ -13,6 +13,10 @@ export default function ChatArea(): JSX.Element {
       setMessages([...messages, arg]);
     });
 
+    socket?.on("logout", (arg) => {
+      setMessages([...messages, arg]);
+    });
+
     return () => {
       socket?.off("joined");
     };
