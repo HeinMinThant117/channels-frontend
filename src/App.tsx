@@ -33,9 +33,9 @@ function App(): JSX.Element {
   return (
     <SocketContext.Provider value={socket}>
       <AuthContext.Provider value={providerValue}>
-        <Grid h="100vh" templateRows="64px 1fr" templateColumns="20% 1fr">
+        <Grid h="100vh" templateRows="64px 1fr" templateColumns="1fr">
           <Navbar />
-          <ChannelsSideBar />
+          {/* <ChannelsSideBar /> */}
           <ChatArea />
         </Grid>
       </AuthContext.Provider>
