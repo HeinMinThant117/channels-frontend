@@ -8,13 +8,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
+import AuthContext from "../contexts/AuthContext";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 export default function Navbar(): JSX.Element {
-  // TODO: Placeholder auth. Switch to context
-  const isAuthenticated = false;
+  const { user } = useContext(AuthContext);
 
   return (
     <GridItem colSpan={3} borderBottom="1px solid #eee">
@@ -35,7 +35,7 @@ export default function Navbar(): JSX.Element {
           />
           <Heading size="md">Channels</Heading>
         </Flex>
-        {isAuthenticated ? (
+        {user != null ? (
           <Flex
             alignItems="center"
             border="2px solid #eee"
@@ -45,7 +45,7 @@ export default function Navbar(): JSX.Element {
             cursor="pointer"
           >
             <Text fontSize="sm" mr={6} fontWeight="semibold">
-              Mob Psycho
+              {user.username}
             </Text>
             <Avatar
               boxSize={7}

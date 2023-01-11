@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from "react";
+import React, { useContext } from "react";
 import {
   Button,
   FormControl,
@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import AuthContext from "../contexts/AuthContext";
 
 interface LoginValues {
   username: string;
@@ -27,6 +28,8 @@ interface LoginValues {
 export default function LoginModal(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+
+  const { setUser } = useContext(AuthContext);
 
   const loginSchema = yup.object({
     username: yup.string().required("Please enter your username"),
@@ -41,7 +44,7 @@ export default function LoginModal(): JSX.Element {
 
   const onSubmit = async (values: LoginValues): Promise<void> => {
     try {
-      await axios.post("http://localhost:3000/login", {
+      const response = await axios.post("http://localhost:3000/login", {
         username: values.username,
         password: values.password,
       });
@@ -53,6 +56,11 @@ export default function LoginModal(): JSX.Element {
         duration: 5000,
         isClosable: true,
       });
+
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (response?.data) {
+        setUser(response.data);
+      }
 
       onClose();
     } catch (e: any) {
