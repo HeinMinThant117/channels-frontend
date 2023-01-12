@@ -3,14 +3,13 @@ import { Box, Button, Flex, GridItem, Textarea } from "@chakra-ui/react";
 import UserJoinedMessage from "./UserJoinedMessage";
 import SocketContext from "../contexts/SocketContext";
 import AuthContext from "../contexts/AuthContext";
+import ChatMessage from "./ChatMessage";
 
 export default function ChatArea(): JSX.Element {
   const socket = useContext(SocketContext);
   const userContext = useContext(AuthContext);
   const [messages, setMessages] = useState<string[]>([]);
   const [currentChatMessage, setCurrentChatMessage] = useState<string>("");
-
-  console.log(userContext);
 
   useEffect(() => {
     socket?.on("joined", (arg) => {
@@ -33,8 +32,18 @@ export default function ChatArea(): JSX.Element {
   }, [socket, messages]);
 
   const sendMessage = (message: string): void => {
-    socket?.emit("message", message);
+    socket?.emit("message", {
+      user: userContext.user,
+      message,
+      type: "message",
+    });
     setCurrentChatMessage("");
+  };
+
+  const renderMessages = (message): JSX.Element => {
+    if (message.type === "message") {
+      return <ChatMessage />;
+    }
   };
 
   return (

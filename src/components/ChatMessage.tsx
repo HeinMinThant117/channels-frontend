@@ -1,7 +1,11 @@
 import React from "react";
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 
-export default function ChatMessage(): JSX.Element {
+interface ChatMessageProps {
+  
+}
+
+export default function ChatMessage({}): JSX.Element {
   return (
     <Box mt={4}>
       <Flex alignItems="center">
